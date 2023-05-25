@@ -38,9 +38,6 @@ class Coordinator implements CoordinatorInterface
         protected ProcessContextInterface $context
     ){}
 
-    /**
-     * {@inheritdoc}
-     */
     public function start(string $scenarioAlias, ParameterBag $queryParameters = null): RedirectResponse
     {
         $process = $this->buildProcess($scenarioAlias);
@@ -56,9 +53,6 @@ class Coordinator implements CoordinatorInterface
         return $this->redirectToStepDisplayAction($process, $step, $queryParameters);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function display(
         string $scenarioAlias,
         string $stepName,
@@ -81,9 +75,6 @@ class Coordinator implements CoordinatorInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function forward(string $scenarioAlias, string $stepName): Response
     {
         $process = $this->buildProcess($scenarioAlias);
@@ -103,13 +94,7 @@ class Coordinator implements CoordinatorInterface
         );
     }
 
-    /**
-     * @param ProcessInterface $process
-     * @param $result
-     *
-     * @return mixed
-     */
-    public function processStepResult(ProcessInterface $process, $result): mixed
+    public function processStepResult(ProcessInterface $process, mixed $result): Response
     {
         if ($result instanceof Response) {
             return $result;
@@ -139,9 +124,6 @@ class Coordinator implements CoordinatorInterface
         throw new \RuntimeException('Wrong action result, expected Response or ActionResult');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function registerScenario(string $alias, ProcessScenarioInterface $scenario): void
     {
         if (isset($this->scenarios[$alias])) {
@@ -153,9 +135,6 @@ class Coordinator implements CoordinatorInterface
         $this->scenarios[$alias] = $scenario;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadScenario(string $alias): ProcessScenarioInterface
     {
         if (!isset($this->scenarios[$alias])) {

@@ -12,6 +12,7 @@
 namespace Sylius\Bundle\FlowBundle\Process\Step;
 
 use Sylius\Bundle\FlowBundle\Process\Context\ProcessContextInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Base step class.
@@ -22,55 +23,35 @@ abstract class AbstractStep implements StepInterface
 {
     /**
      * Step name in current scenario.
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setName($name)
+    public function setName($name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function forwardAction(ProcessContextInterface $context)
+    public function forwardAction(ProcessContextInterface $context): null|ActionResult|Response
     {
         return $this->complete();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isActive()
+    public function isActive(): bool
     {
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function complete()
+    public function complete(): ActionResult
     {
         return new ActionResult();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function proceed($nextStepName)
+    public function proceed(string $nextStepName): ActionResult
     {
         return new ActionResult($nextStepName);
     }
