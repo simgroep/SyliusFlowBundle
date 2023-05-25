@@ -11,7 +11,6 @@
 
 namespace Sylius\Bundle\FlowBundle\Process\Coordinator;
 
-use FOS\RestBundle\View\View;
 use Sylius\Bundle\FlowBundle\Process\Builder\ProcessBuilderInterface;
 use Sylius\Bundle\FlowBundle\Process\Context\ProcessContextInterface;
 use Sylius\Bundle\FlowBundle\Process\ProcessInterface;
@@ -31,52 +30,18 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class Coordinator implements CoordinatorInterface
 {
-    /**
-     * Router.
-     *
-     * @var RouterInterface
-     */
-    protected $router;
+    protected array $scenarios = [];
 
-    /**
-     * Process builder.
-     *
-     * @var ProcessBuilderInterface
-     */
-    protected $builder;
-
-    /**
-     * Process context.
-     *
-     * @var ProcessContextInterface
-     */
-    protected $context;
-
-    /**
-     * Registered scenarios.
-     *
-     * @var array
-     */
-    protected $scenarios = [];
-
-    /**
-     * Constructor.
-     *
-     * @param RouterInterface         $router
-     * @param ProcessBuilderInterface $builder
-     * @param ProcessContextInterface $context
-     */
-    public function __construct(RouterInterface $router, ProcessBuilderInterface $builder, ProcessContextInterface $context)
-    {
-        $this->router = $router;
-        $this->builder = $builder;
-        $this->context = $context;
-    }
+    public function __construct(
+        protected RouterInterface $router,
+        protected ProcessBuilderInterface $builder,
+        protected ProcessContextInterface $context
+    ){}
 
     /**
      * {@inheritdoc}
      */
-    public function start($scenarioAlias, ParameterBag $queryParameters = null)
+    public function start(string $scenarioAlias, ParameterBag $queryParameters = null): RedirectResponse
     {
         $process = $this->buildProcess($scenarioAlias);
         $step = $process->getFirstStep();
@@ -94,8 +59,11 @@ class Coordinator implements CoordinatorInterface
     /**
      * {@inheritdoc}
      */
-    public function display($scenarioAlias, $stepName, ParameterBag $queryParameters = null)
-    {
+    public function display(
+        string $scenarioAlias,
+        string $stepName,
+        ParameterBag $queryParameters = null
+    ): Response {
         $process = $this->buildProcess($scenarioAlias);
         $step = $process->getStepByName($stepName);
 
@@ -116,7 +84,7 @@ class Coordinator implements CoordinatorInterface
     /**
      * {@inheritdoc}
      */
-    public function forward($scenarioAlias, $stepName)
+    public function forward(string $scenarioAlias, string $stepName): Response
     {
         $process = $this->buildProcess($scenarioAlias);
         $step = $process->getStepByName($stepName);
@@ -139,11 +107,11 @@ class Coordinator implements CoordinatorInterface
      * @param ProcessInterface $process
      * @param $result
      *
-     * @return RedirectResponse
+     * @return mixed
      */
-    public function processStepResult(ProcessInterface $process, $result)
+    public function processStepResult(ProcessInterface $process, $result): mixed
     {
-        if ($result instanceof Response || $result instanceof View) {
+        if ($result instanceof Response) {
             return $result;
         }
 
@@ -174,7 +142,7 @@ class Coordinator implements CoordinatorInterface
     /**
      * {@inheritdoc}
      */
-    public function registerScenario($alias, ProcessScenarioInterface $scenario)
+    public function registerScenario(string $alias, ProcessScenarioInterface $scenario): void
     {
         if (isset($this->scenarios[$alias])) {
             throw new InvalidArgumentException(
@@ -188,7 +156,7 @@ class Coordinator implements CoordinatorInterface
     /**
      * {@inheritdoc}
      */
-    public function loadScenario($alias)
+    public function loadScenario(string $alias): ProcessScenarioInterface
     {
         if (!isset($this->scenarios[$alias])) {
             throw new InvalidArgumentException(sprintf('Process scenario with alias "%s" is not registered', $alias));
@@ -197,20 +165,11 @@ class Coordinator implements CoordinatorInterface
         return $this->scenarios[$alias];
     }
 
-    /**
-     * Redirect to step display action.
-     *
-     * @param ProcessInterface $process
-     * @param StepInterface    $step
-     * @param ParameterBag     $queryParameters
-     *
-     * @return RedirectResponse
-     */
     protected function redirectToStepDisplayAction(
         ProcessInterface $process,
         StepInterface $step,
-        ParameterBag $queryParameters = null
-    ) {
+        ?ParameterBag $queryParameters = null
+    ): RedirectResponse {
         $this->context->addStepToHistory($step->getName());
 
         if (null !== $route = $process->getDisplayRoute()) {
@@ -238,13 +197,7 @@ class Coordinator implements CoordinatorInterface
         );
     }
 
-    /**
-     * @param ProcessInterface $process
-     * @param string           $scenarioAlias
-     *
-     * @return RedirectResponse
-     */
-    protected function goToLastValidStep(ProcessInterface $process, $scenarioAlias)
+    protected function goToLastValidStep(ProcessInterface $process, string $scenarioAlias): RedirectResponse
     {
         //the step we are supposed to display was not found in the history.
         if (null === $this->context->getPreviousStep()) {
@@ -267,12 +220,8 @@ class Coordinator implements CoordinatorInterface
 
     /**
      * Builds process for given scenario alias.
-     *
-     * @param string $scenarioAlias
-     *
-     * @return ProcessInterface
      */
-    protected function buildProcess($scenarioAlias)
+    protected function buildProcess(string $scenarioAlias): ProcessInterface
     {
         $process = $this->builder->build($this->loadScenario($scenarioAlias));
         $process->setScenarioAlias($scenarioAlias);

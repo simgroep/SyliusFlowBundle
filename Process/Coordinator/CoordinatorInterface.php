@@ -11,7 +11,6 @@
 
 namespace Sylius\Bundle\FlowBundle\Process\Coordinator;
 
-use FOS\RestBundle\View\View;
 use Sylius\Bundle\FlowBundle\Process\Scenario\ProcessScenarioInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,50 +26,31 @@ interface CoordinatorInterface
 {
     /**
      * Start scenario, should redirect to first step.
-     *
-     * @param string       $scenarioAlias
-     * @param ParameterBag $queryParameters
-     *
-     * @return RedirectResponse
      */
-    public function start($scenarioAlias, ParameterBag $queryParameters = null);
+    public function start(string $scenarioAlias, ParameterBag $queryParameters = null): RedirectResponse;
 
     /**
      * Display step.
-     *
-     * @param string       $scenarioAlias
-     * @param string       $stepName
-     * @param ParameterBag $queryParameters
-     *
-     * @return Response|View
      */
-    public function display($scenarioAlias, $stepName, ParameterBag $queryParameters = null);
+    public function display(
+        string $scenarioAlias,
+        string $stepName,
+        ParameterBag $queryParameters = null
+    ): Response;
 
     /**
      * Move forward.
      * If step was completed, redirect to next step, otherwise return response.
-     *
-     * @param string $scenarioAlias
-     * @param string $stepName
-     *
-     * @return Response|View
      */
-    public function forward($scenarioAlias, $stepName);
+    public function forward(string $scenarioAlias, string $stepName): Response;
 
     /**
      * Register new process scenario.
-     *
-     * @param string                   $alias
-     * @param ProcessScenarioInterface $scenario
      */
-    public function registerScenario($alias, ProcessScenarioInterface $scenario);
+    public function registerScenario(string $alias, ProcessScenarioInterface $scenario): void;
 
     /**
      * Load process scenario with given alias.
-     *
-     * @param string $scenario
-     *
-     * @return ProcessScenarioInterface
      */
-    public function loadScenario($scenario);
+    public function loadScenario(string $scenario): ProcessScenarioInterface;
 }
