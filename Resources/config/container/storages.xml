@@ -24,9 +24,17 @@
 
     <services>
         <service id="sylius.process_storage.session" class="%sylius.process_storage.session.class%">
-            <argument type="service" id="session" />
+            <factory service="request_stack" method="getSession" />
         </service>
         <service id="sylius.process_storage.session.bag" class="%sylius.process_storage.session.bag.class%" />
+
+        <service id="sylius.session_factory_decorator"
+                 class="Sylius\Bundle\FlowBundle\Storage\SessionFactoryDecorator"
+                 decorates="session.factory"
+                 public="false">
+            <argument type="service" id="sylius.session_factory_decorator.inner" />
+            <argument type="service" id="sylius.process_storage.session.bag" />
+        </service>
     </services>
 
 </container>
