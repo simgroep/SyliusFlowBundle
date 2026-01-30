@@ -24,8 +24,8 @@
         "symfony/framework-bundle": "^5.3|^6.0"
     },
     "require-dev": {
-        "phpspec/phpspec": "^7.0",
-        "symfony/yaml": "^5.3"
+        "phpspec/phpspec": "^8.0",
+        "symfony/yaml": "^5.3|^6.0"
     },
     "config": {
         "bin-dir": "bin"
