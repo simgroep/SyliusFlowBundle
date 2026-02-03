@@ -31,7 +31,7 @@ class SessionFlowsBag extends NamespacedAttributeBag
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return self::NAME;
     }
