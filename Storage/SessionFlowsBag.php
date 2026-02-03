@@ -5,13 +5,10 @@
  *
  * (c) Paweł Jędrzejewski
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * For the full license information, view the LICENSE file that was distributed with this source code.
  */
 
 namespace Sylius\Bundle\FlowBundle\Storage;
-
-use Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag;
 
 /**
  * Separate session bag to store flows data.
