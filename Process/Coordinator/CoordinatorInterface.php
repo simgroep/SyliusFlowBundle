@@ -27,7 +27,7 @@ interface CoordinatorInterface
     /**
      * Start scenario, should redirect to first step.
      */
-    public function start(string $scenarioAlias, ParameterBag $queryParameters = null): RedirectResponse;
+    public function start(string $scenarioAlias, ?ParameterBag $queryParameters = null): RedirectResponse;
 
     /**
      * Display step.
@@ -35,7 +35,7 @@ interface CoordinatorInterface
     public function display(
         string $scenarioAlias,
         string $stepName,
-        ParameterBag $queryParameters = null
+        ?ParameterBag $queryParameters = null,
     ): Response;
 
     /**

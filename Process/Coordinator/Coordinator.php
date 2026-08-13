@@ -38,7 +38,7 @@ class Coordinator implements CoordinatorInterface
         protected ProcessContextInterface $context
     ){}
 
-    public function start(string $scenarioAlias, ParameterBag $queryParameters = null): RedirectResponse
+    public function start(string $scenarioAlias, ?ParameterBag $queryParameters = null): RedirectResponse
     {
         $process = $this->buildProcess($scenarioAlias);
         $step = $process->getFirstStep();
@@ -56,7 +56,7 @@ class Coordinator implements CoordinatorInterface
     public function display(
         string $scenarioAlias,
         string $stepName,
-        ParameterBag $queryParameters = null
+        ?ParameterBag $queryParameters = null,
     ): Response {
         $process = $this->buildProcess($scenarioAlias);
         $step = $process->getStepByName($stepName);
