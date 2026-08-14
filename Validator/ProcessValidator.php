@@ -37,7 +37,7 @@ class ProcessValidator implements ProcessValidatorInterface
      */
     protected $validation;
 
-    public function __construct($message = null, $stepName = null, \Closure $validation = null)
+    public function __construct($message = null, $stepName = null, ?\Closure $validation = null)
     {
         $this->message = $message;
         $this->stepName = $stepName;
